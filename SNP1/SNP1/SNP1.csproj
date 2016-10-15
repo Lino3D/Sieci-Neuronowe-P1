@@ -55,6 +55,7 @@
     <Compile Include="CsvOperations\ImportDataPointSets.cs" />
     <Compile Include="CsvOperations\Interfaces\IImport.cs" />
     <Compile Include="CsvOperations\Maps\DataPointClsMap.cs" />
+    <Compile Include="CsvOperations\Maps\DataPointMap.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\DataPointCls.cs" />
     <Compile Include="Models\Interfaces\IDataPoint.cs" />
