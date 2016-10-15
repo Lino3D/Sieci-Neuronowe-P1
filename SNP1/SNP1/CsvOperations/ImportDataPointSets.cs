@@ -9,7 +9,7 @@ namespace SNP1.EPPlus
 {
     public class ImportDataPointSets
     {
-        private List<DataPointCls> DataPoints { get; set; }
+        public List<DataPointCls> DataPoints { get; set; }
 
         public string DataPath { get; set; }
 
