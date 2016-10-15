@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SNP1.EPPlus;
+using System;
 
 namespace SNP1
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static string csvPath = "C:\\Users\\Lino\\Desktop\\SN\\Klasyfikacja\\datatrain.csv";
+
+        private static void Main(string[] args)
         {
+            var trainSet = new ImportDataPointSets(csvPath);
+
+            Console.ReadKey();
         }
     }
 }

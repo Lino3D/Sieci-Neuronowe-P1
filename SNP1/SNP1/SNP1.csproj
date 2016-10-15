@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="encog-core-cs, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e882172b12155d4, processorArchitecture=MSIL">
       <HintPath>..\packages\encog-dotnet-core.3.3.0\lib\net35\encog-core-cs.dll</HintPath>
       <Private>True</Private>
@@ -47,6 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CsvOperations\Export.cs" />
+    <Compile Include="CsvOperations\ImportDataPointSets.cs" />
+    <Compile Include="CsvOperations\Interfaces\IImport.cs" />
+    <Compile Include="CsvOperations\Maps\DataPointClsMap.cs" />
+    <Compile Include="Models\DataPoint.cs" />
+    <Compile Include="Models\DataPointCls.cs" />
+    <Compile Include="Models\Interfaces\IDataPoint.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +65,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
