@@ -61,6 +61,7 @@
     <Compile Include="Models\Interfaces\IDataPoint.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleNeuralNetwork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

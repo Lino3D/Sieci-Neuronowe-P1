@@ -1,11 +1,18 @@
 ﻿using Encog;
 using Encog.Engine.Network.Activation;
 using Encog.ML;
+using Encog.ML.Data;
+using Encog.ML.Data.Basic;
 using Encog.ML.Data.Versatile;
 using Encog.ML.Data.Versatile.Columns;
 using Encog.ML.Data.Versatile.Sources;
 using Encog.ML.Factory;
 using Encog.ML.Model;
+using Encog.Neural.Networks;
+using Encog.Neural.Networks.Layers;
+using Encog.Neural.Networks.Training;
+using Encog.Neural.Networks.Training.Propagation;
+using Encog.Neural.Networks.Training.Propagation.Back;
 using Encog.Neural.Pattern;
 using Encog.Util.CSV;
 using SNP1.EPPlus;
@@ -32,43 +39,45 @@ namespace SNP1
 
         private static void Main(string[] args)
         {
+
+
+            // To nie pasuje bo nie pozwala na customizację ( jest generowane przez factory, chyba lepiej tworzyć samemu)
+
+            //            IVersatileDataSource dataSource = new CSVDataSource(csvPath, true, CSVFormat.DecimalPoint);
+            //            VersatileMLDataSet data = new VersatileMLDataSet(dataSource);
+            //            data.DefineSourceColumn("x", 0, ColumnType.Nominal);
+            //            data.DefineSourceColumn("y", 1, ColumnType.Nominal);
+            //            ColumnDefinition outputColumn = data.DefineSourceColumn("cls", 2, ColumnType.Nominal);
+            //            data.Analyze();
+            //            data.DefineSingleOutputOthersInput(outputColumn);
+
+
+            ////            var methodFactory = new MLMethodFactory();
+            ////            var method = methodFactory.Create(
+            ////            MLMethodFactory.TYPEFEEDFORWARD,
+            ////            ”?:B−> SIGMOID−> 4:B−> SIGMOID−>?”,
+            ////2,
+            ////1);
+
+            //            var model = new EncogModel(data);
+            //            model.SelectMethod(data, MLMethodFactory.TypeFeedforward);
+            //            model.Report = new ConsoleStatusReportable();
+            //            data.Normalize();
+
             List<DataPointCls> points = (new ImportDataPointSets(csvPath).DataPoints);
 
-            double[][] input = new double[points.Count][];
-
-            for (int i = 0; i < points.Count; i++)
-            {
-                input[i] = new[] { points[i].X, points[i].Y };
-            }
-
-            double[][] output = new double[points.Count][];
-            for (int i = 0; i < points.Count; i++)
-            {
-                output[i] = new[] { (double)points[i].Cls };
-            }
-
-            //
-
-            IVersatileDataSource dataSource = new CSVDataSource(csvPath, true, CSVFormat.DecimalPoint);
-            VersatileMLDataSet data = new VersatileMLDataSet(dataSource);
-            data.DefineSourceColumn("x", 0, ColumnType.Nominal);
-            data.DefineSourceColumn("y", 1, ColumnType.Nominal);
-            ColumnDefinition outputColumn = data.DefineSourceColumn("cls", 2, ColumnType.Nominal);
-            data.Analyze();
-            data.DefineSingleOutputOthersInput(outputColumn);
+            SimpleNeuralNetwork myNetwork = new SimpleNeuralNetwork();
+            myNetwork.InitializeTrainingSet(points);
+            myNetwork.SetActivationFunction(new ActivationBiPolar());
+            myNetwork.AddLayer(2);
+            myNetwork.AddLayerBunch(8, 3);
+            myNetwork.AddLayer(1);
+            myNetwork.StartLearning(10000);
 
 
-//            var methodFactory = new MLMethodFactory();
-//            var method = methodFactory.Create(
-//            MLMethodFactory.TYPEFEEDFORWARD,
-//            ”?:B−> SIGMOID−> 4:B−> SIGMOID−>?”,
-//2,
-//1);
+      
 
-            var model = new EncogModel(data);
-            model.SelectMethod(data, MLMethodFactory.TypeFeedforward);
-            model.Report = new ConsoleStatusReportable();
-            data.Normalize();
+
 
             Console.ReadKey();
         }
