@@ -66,6 +66,7 @@
     <Compile Include="CsvOperations\Maps\DataPointMap.cs" />
     <Compile Include="DataHelper\ConsoleWriter.cs" />
     <Compile Include="DataHelper\MyCore.cs" />
+    <Compile Include="DataHelper\ProgramController.cs" />
     <Compile Include="Models\Interfaces\INeuralNetwork.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\DataPointCls.cs" />
