@@ -145,7 +145,7 @@ namespace SNP1
             }
         }
 
-        public void StartLearning(int iterationCount)
+        public IEnumerable<IResult> StartLearning(int iterationCount)
         {
             this.Network.Structure.FinalizeStructure();
             Network.Reset();
@@ -161,12 +161,14 @@ namespace SNP1
                 epoch++;
             } while (epoch<iterationCount);
 
-     
+
+           
             foreach (IMLDataPair pair in TrainingSet)
             {
                 IMLData output = Network.Compute(pair.Input);
                 MyCore.Resolve<IOutput>().Write(pair.Input[0] + @"," + pair.Input[1]
                                   + @", actual=" + output[0] + @",ideal=" + pair.Ideal[0]);
+               yield return new Result() { Input = pair, Output = output };
             }
         }
     }

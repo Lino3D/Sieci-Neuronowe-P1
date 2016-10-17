@@ -3,6 +3,7 @@ using Encog.ML;
 using Encog.Neural.Pattern;
 using SNP1.EPPlus;
 using SNP1.Models;
+using SNP1.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace SNP1.DataHelper
             myNetwork.AddLayer(2);
             myNetwork.AddLayerBunch(8, 3);
             myNetwork.AddLayer(1);
-            myNetwork.StartLearning(10000);
+
+            ErrorCalculator.CalculateError(myNetwork.StartLearning(10000).ToList(), myNetwork);
         }
 
         // To nie pasuje bo nie pozwala na customizację ( jest generowane przez factory, chyba lepiej tworzyć samemu)
