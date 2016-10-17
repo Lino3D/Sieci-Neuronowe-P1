@@ -1,4 +1,5 @@
-﻿using Encog;
+﻿using Castle.MicroKernel.Registration;
+using Encog;
 using Encog.Engine.Network.Activation;
 using Encog.ML;
 using Encog.ML.Data;
@@ -15,8 +16,10 @@ using Encog.Neural.Networks.Training.Propagation;
 using Encog.Neural.Networks.Training.Propagation.Back;
 using Encog.Neural.Pattern;
 using Encog.Util.CSV;
+using SNP1.DataHelper;
 using SNP1.EPPlus;
 using SNP1.Models;
+using SNP1.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -24,7 +27,7 @@ namespace SNP1
 {
     internal class Program
     {
-        private static string csvPath = "C:\\Users\\Lino\\Desktop\\SN\\Klasyfikacja\\datatrain.csv";
+        private static string csvPath = @"..\..\Resource\datatrain.csv";
 
         private static IMLMethod CreateFeedforwardNetwork()
         {
@@ -39,7 +42,7 @@ namespace SNP1
 
         private static void Main(string[] args)
         {
-
+            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<ConsoleWriter>());
 
             // To nie pasuje bo nie pozwala na customizację ( jest generowane przez factory, chyba lepiej tworzyć samemu)
 
@@ -68,7 +71,7 @@ namespace SNP1
 
             SimpleNeuralNetwork myNetwork = new SimpleNeuralNetwork();
             myNetwork.InitializeTrainingSet(points);
-            myNetwork.SetActivationFunction(new ActivationBiPolar());
+            myNetwork.ActivationFunction =new ActivationBiPolar();
             myNetwork.AddLayer(2);
             myNetwork.AddLayerBunch(8, 3);
             myNetwork.AddLayer(1);

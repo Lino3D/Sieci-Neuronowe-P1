@@ -10,10 +10,8 @@ namespace SNP1.Models
         {
         }
 
-        public DataPointCls(double a, double b, int c)
-        {
-            this.X = a;
-            this.Y = b;
+        public DataPointCls(double a, double b, int c) : base(a,b)
+        {            
             this.Cls = c;
         }
 
