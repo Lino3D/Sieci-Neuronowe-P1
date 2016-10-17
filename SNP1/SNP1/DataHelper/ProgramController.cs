@@ -14,9 +14,9 @@ namespace SNP1.DataHelper
 {
     public static class ProgramController
     {
-        private static string csvPath = @"..\..\Resource\datatrain.csv";
+        private static string csvPath = @"..\..\..\Resource\datatrain.csv";
 
-        public static void InitializeSimpleNetwork()
+        public static double InitializeSimpleNetwork()
         {
             List<DataPointCls> points = (new ImportDataPointSets(csvPath).DataPoints);
 
@@ -27,7 +27,7 @@ namespace SNP1.DataHelper
             myNetwork.AddLayerBunch(8, 3);
             myNetwork.AddLayer(1);
 
-            ErrorCalculator.CalculateError(myNetwork.StartLearning(10000).ToList(), myNetwork);
+            return ErrorCalculator.CalculateError(myNetwork.StartLearning(10000).ToList(), myNetwork);
         }
 
         // To nie pasuje bo nie pozwala na customizację ( jest generowane przez factory, chyba lepiej tworzyć samemu)

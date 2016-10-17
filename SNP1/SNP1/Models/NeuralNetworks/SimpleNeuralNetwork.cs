@@ -167,7 +167,7 @@ namespace SNP1
             {
                 IMLData output = Network.Compute(pair.Input);
                 MyCore.Resolve<IOutput>().Write(pair.Input[0] + @"," + pair.Input[1]
-                                  + @", actual=" + output[0] + @",ideal=" + pair.Ideal[0]);
+                                  + @", actual=" + output[0] + @",ideal=" + pair.Ideal[0]);                
                yield return new Result() { Input = pair, Output = output };
             }
         }
