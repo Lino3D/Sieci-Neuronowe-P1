@@ -32,7 +32,7 @@ namespace WinApp
        public MainWindow()
         {
             InitializeComponent();
-
+            this.DataContext = new costammodel();
             MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFWriter>());
 
         }
