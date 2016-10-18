@@ -1,4 +1,7 @@
 ﻿using Caliburn.Micro;
+using Castle.MicroKernel.Registration;
+using SNP1.DataHelper;
+using SNP1.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,7 @@ namespace WinAppV2
 
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
         {
+            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFWriter>());
             DisplayRootViewFor<MainViewModel>();
         }
     }
