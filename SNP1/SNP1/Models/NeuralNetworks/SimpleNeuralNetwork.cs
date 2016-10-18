@@ -109,7 +109,7 @@ namespace SNP1
 
             Network = new BasicNetwork();
         }
-        
+
         public void ResetNetwork()
         {
             this.Network.Reset();
@@ -139,7 +139,7 @@ namespace SNP1
 
         public void AddLayerBunch(int layerCount, int neuronCount)
         {
-            for(int i=0; i<layerCount; i++)
+            for (int i = 0; i < layerCount; i++)
             {
                 this.Network.AddLayer(new BasicLayer(this.ActivationFunction, this.HasBias, neuronCount));
             }
@@ -149,26 +149,26 @@ namespace SNP1
         {
             this.Network.Structure.FinalizeStructure();
             Network.Reset();
+            IOutput writer = MyCore.Resolve<IOutput>();
 
             Propagation train = new Backpropagation(this.Network, this.TrainingSet, this.LearningRate, this.TheMomentum);
-           // train.BatchSize = 1;
+            // train.BatchSize = 1;
 
             int epoch = 1;
             do
             {
                 train.Iteration();
-                MyCore.Resolve<IOutput>().Write(@"Epoch #" + epoch + @" Error:" + train.Error);
+                writer.Write(String.Format(@"Epoch # {0} Error: {1}", epoch, train.Error));
                 epoch++;
-            } while (epoch<iterationCount);
+            } while (epoch < iterationCount);
 
 
-           
+
             foreach (IMLDataPair pair in TrainingSet)
             {
                 IMLData output = Network.Compute(pair.Input);
-                MyCore.Resolve<IOutput>().Write(pair.Input[0] + @"," + pair.Input[1]
-                                  + @", actual=" + output[0] + @",ideal=" + pair.Ideal[0]);
-               yield return new Result() { Input = pair, Output = output };
+                writer.Write(String.Format(@"{0},{1}, actual={2},ideal={3}", pair.Input[0], pair.Input[1], output[0], pair.Ideal[0]));
+                yield return new Result() { Input = pair, Output = output };
             }
         }
     }

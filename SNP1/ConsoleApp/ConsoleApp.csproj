@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F0CD49A-E9B4-4326-B451-7C3507266588}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{B41EA471-0FDF-4F48-ABEC-7A7A0FCAC4FE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SNP1</RootNamespace>
-    <AssemblyName>SNP1</AssemblyName>
+    <RootNamespace>ConsoleApp</RootNamespace>
+    <AssemblyName>ConsoleApp</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,9 +32,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
@@ -42,14 +39,6 @@
     </Reference>
     <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="encog-core-cs, Version=3.3.0.0, Culture=neutral, PublicKeyToken=3e882172b12155d4, processorArchitecture=MSIL">
-      <HintPath>..\packages\encog-dotnet-core.3.3.0\lib\net35\encog-core-cs.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,30 +51,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CsvOperations\Export.cs" />
-    <Compile Include="CsvOperations\ImportDataPointSets.cs" />
-    <Compile Include="CsvOperations\Interfaces\IImport.cs" />
-    <Compile Include="CsvOperations\Maps\DataPointClsMap.cs" />
-    <Compile Include="CsvOperations\Maps\DataPointMap.cs" />
-    <Compile Include="DataHelper\ErrorCalculator.cs" />
-    <Compile Include="DataHelper\MyCore.cs" />
-    <Compile Include="DataHelper\ProgramController.cs" />
-    <Compile Include="Models\Interfaces\INeuralNetwork.cs" />
-    <Compile Include="Models\DataPoint.cs" />
-    <Compile Include="Models\DataPointCls.cs" />
-    <Compile Include="Models\Interfaces\IDataPoint.cs" />
-    <Compile Include="DataHelper\Interfaces\IOutput.cs" />
-    <Compile Include="Models\Interfaces\IResult.cs" />
-    <Compile Include="Models\Result.cs" />
+    <Compile Include="ConsoleWriter.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\NeuralNetworks\SimpleNeuralNetwork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Resource\datatrain.csv" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SNP1\SNP1.csproj">
+      <Project>{7f0cd49a-e9b4-4326-b451-7c3507266588}</Project>
+      <Name>SNP1</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

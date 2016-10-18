@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
-namespace SNP1.Models
+namespace WinApp
 {
-    public class ConsoleWriter : IOutput
+    public class WPFWriter : IOutput
     {
         public void Write(string str)
         {
-            Console.WriteLine(str);
+            //WinApp.MainWindow.myrtf.
+            (Application.Current.MainWindow as MainWindow).SetTextForRichTextBox(str);
         }
     }
 }
