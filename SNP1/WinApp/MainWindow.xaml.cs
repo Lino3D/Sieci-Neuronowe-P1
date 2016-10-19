@@ -1,6 +1,5 @@
 ﻿using Castle.MicroKernel.Registration;
 using SNP1.DataHelper;
-using SNP1.Models;
 using SNP1.Models.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,29 +23,24 @@ namespace WinApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+
+        public void SetTextForRichTextBox(string text)
         {
-            InitializeComponent();
-            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<ConsoleWriter>());
+            rtf.AppendText(text);
         }
 
-        public string _ResultLabel
+       public MainWindow()
         {
-            get
-            {
-                return ResultLabel.Content.ToString();
-            }
-            set
-            {
-                ResultLabel.Content = value;
-            }
+            InitializeComponent();
+            this.DataContext = new costammodel();
+            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFWriter>());
+
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            //ProgramController.InitializeSimpleNetwork();
-            _ResultLabel = ProgramController.InitializeSimpleNetwork().ToString();
 
+            ProgramController.InitializeSimpleNetwork();
         }
     }
 }

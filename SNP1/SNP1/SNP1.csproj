@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7F0CD49A-E9B4-4326-B451-7C3507266588}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SNP1</RootNamespace>
     <AssemblyName>SNP1</AssemblyName>
@@ -67,10 +67,9 @@
     <Compile Include="CsvOperations\Interfaces\IImport.cs" />
     <Compile Include="CsvOperations\Maps\DataPointClsMap.cs" />
     <Compile Include="CsvOperations\Maps\DataPointMap.cs" />
-    <Compile Include="DataHelper\ConsoleWriter.cs" />
     <Compile Include="DataHelper\ErrorCalculator.cs" />
-    <Compile Include="DataHelper\MyCore.cs" />
-    <Compile Include="DataHelper\ProgramController.cs" />
+    <Compile Include="MyCore.cs" />
+    <Compile Include="ProgramController.cs" />
     <Compile Include="Models\Interfaces\INeuralNetwork.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\DataPointCls.cs" />
@@ -78,7 +77,6 @@
     <Compile Include="DataHelper\Interfaces\IOutput.cs" />
     <Compile Include="Models\Interfaces\IResult.cs" />
     <Compile Include="Models\Result.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\NeuralNetworks\SimpleNeuralNetwork.cs" />
   </ItemGroup>
