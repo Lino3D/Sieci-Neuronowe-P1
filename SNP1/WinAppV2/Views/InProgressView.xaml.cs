@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace WinAppV2.Views
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Interaction logic for InProgressView.xaml
     /// </summary>
-    public partial class MainView : Window
+    public partial class InProgressView : Window
     {
-        public MainView()
+        public InProgressView()
         {
             InitializeComponent();
         }

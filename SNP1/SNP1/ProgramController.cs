@@ -33,6 +33,13 @@ namespace SNP1.DataHelper
         {
             InitializeSimpleNetwork(10000);
         }
+
+        public static void SetBiPolarActivation(INeuralNetwork network)
+        {
+            network.ActivationFunction = new ActivationBiPolar();
+        }
+
+        
         // To nie pasuje bo nie pozwala na customizację ( jest generowane przez factory, chyba lepiej tworzyć samemu)
 
         //            IVersatileDataSource dataSource = new CSVDataSource(csvPath, true, CSVFormat.DecimalPoint);

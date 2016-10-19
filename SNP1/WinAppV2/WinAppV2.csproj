@@ -111,13 +111,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="WPFWriter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\InProgressViewModel.cs" />
+    <Compile Include="Views\InProgressView.xaml.cs">
+      <DependentUpon>InProgressView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPFConsoleWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppBootstrapper.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -148,17 +153,26 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\InProgressView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resource\NN.gif" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SNP1\SNP1.csproj">
       <Project>{7f0cd49a-e9b4-4326-b451-7c3507266588}</Project>
       <Name>SNP1</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\NNImage.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

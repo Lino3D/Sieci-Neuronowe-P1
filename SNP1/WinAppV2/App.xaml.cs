@@ -19,7 +19,7 @@ namespace WinAppV2
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFWriter>());
+            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFConsoleWriter>());
         }
 
     }

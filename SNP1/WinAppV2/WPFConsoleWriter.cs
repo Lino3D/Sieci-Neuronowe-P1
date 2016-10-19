@@ -5,21 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WinAppV2.ViewModels;
+using WinAppV2.Views;
 
 namespace WinAppV2
 {
-    public class WPFWriter : IOutput
+    public class WPFConsoleWriter : IOutput
     {
         public void Write(string str)
         {
-            //WinApp.MainWindow.myrtf.
-            MainViewModel mv;
             var a = Application.Current.Windows.OfType<MainView>().SingleOrDefault().DataContext as MainViewModel;
-            a.FirstName = str;
-       ///     Application.Current.Windows.OfType<MainView>().SingleOrDefault().UpdateLayout();
-            //   mv.FirstName = str;
-            //     (Application.Current.MainWindow as MainView).label.Content = str;
-
+            a.Console = str;
         }
     }
 }

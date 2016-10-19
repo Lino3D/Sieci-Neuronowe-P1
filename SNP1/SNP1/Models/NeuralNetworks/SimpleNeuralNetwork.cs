@@ -171,5 +171,6 @@ namespace SNP1
                 yield return new Result() { Input = pair, Output = output };
             }
         }
+        
     }
 }
