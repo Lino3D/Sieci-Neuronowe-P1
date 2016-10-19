@@ -6,11 +6,37 @@
         xmlns:local="clr-namespace:WinAppV2"
         xmlns:Window="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:cal="http://www.caliburnproject.org"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="MainView" Height="400" Width="640">
     <Grid>
         <Label x:Name="FirstName" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" cal:Message.Attach="Run"   Margin="10,334,0,0" VerticalAlignment="Top" Width="75"/>
+
+
+        <StackPanel Margin="0,259,0,0">
+            <WrapPanel>
+            <Label x:Name="LeraningRateLabel" Content="Learning Rate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <xctk:DecimalUpDown Value="{Binding LearningRate,Mode=TwoWay}" Width="70" Increment=".1" Minimum="0.01" Maximum="100" Margin="10,5,10,0"/>            
+            <Label x:Name="IterationsLabel" Content="Iterations" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <xctk:IntegerUpDown Value="{Binding Itreations,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,5,10,0"/>
+            </WrapPanel>
+            <CheckBox x:Name="BiasCheckbox" Content="Bias" IsChecked="{Binding Bias, Mode=TwoWay}"  Margin="10,0,10,0"/>
+
+
+
+
+
+            <Button x:Name="sdf" Content="Start" HorizontalAlignment="Left" cal:Message.Attach="Run"    VerticalAlignment="Top" Width="75"/>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="156" Margin="78,79,0,0" VerticalAlignment="Top" Width="443">
+            <Label x:Name="12" Content="Iterations" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <xctk:IntegerUpDown Value="{Binding Itreations,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,5,10,0"/>
+            <CheckBox x:Name="33" Content="Bias" IsChecked="{Binding Bias, Mode=TwoWay}"  Margin="10,0,10,0"/>
+
+
+        </StackPanel>
+
+
 
     </Grid>
 </Window:MetroWindow>

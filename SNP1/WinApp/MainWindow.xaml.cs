@@ -29,12 +29,10 @@ namespace WinApp
             rtf.AppendText(text);
         }
 
-       public MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
             this.DataContext = new costammodel();
-            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFWriter>());
-
         }
 
         private void button_Click(object sender, RoutedEventArgs e)

@@ -18,8 +18,7 @@ namespace WinAppV2
         }
 
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
-        {
-            MyCore.Container.Register(Component.For<IOutput>().ImplementedBy<WPFWriter>());
+        {            
             DisplayRootViewFor<MainViewModel>();
         }
     }
