@@ -101,7 +101,7 @@ namespace WinAppV2.ViewModels
 
         public void Run()
         {
-         //   ProgramController.InitializeSimpleNetwork();
+            //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             points = (new ImportDataPointSets(csvPath).DataPoints);
             Network.InitializeTrainingSet(points);
@@ -111,22 +111,28 @@ namespace WinAppV2.ViewModels
             Network.AddLayerBunch(8, 3);
             Network.AddLayer(1);
 
-            //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
-            //newWindowThread.SetApartmentState(ApartmentState.STA);
-            //newWindowThread.IsBackground = true;
-            //newWindowThread.Start();
+            Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
+            newWindowThread.SetApartmentState(ApartmentState.STA);
+            newWindowThread.IsBackground = true;
+            newWindowThread.Start();
 
-            ErrorCalculator.CalculateError(Network.StartLearning(Iterations).ToList(), Network);
+            //  ErrorCalculator.CalculateError(Network.StartLearning(Iterations).ToList(), Network);
+            Network.StartLearning(Iterations);
 
-            
+            ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
+
         }
 
         private void ThreadStartingPoint()
         {
-            InProgressView tempWindow = new InProgressView();
-            tempWindow.Show();
+
+            IWindowManager manager = new WindowManager();
+            //var viewModel = Activator.CreateInstance(typeof(InProgressViewModel), null);
+            var a  = manager.ShowDialog(typeof(InProgressViewModel), null, null);
+            //InProgressView tempWindow = new InProgressView();
+       //     tempWindow.Show();
             System.Windows.Threading.Dispatcher.Run();
-            
+
         }
     }
 }

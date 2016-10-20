@@ -18,12 +18,25 @@ namespace SNP1
     public class SimpleNeuralNetwork : INeuralNetwork
     {
         private IMLDataSet trainingSet;
+        private IMLDataSet testSet;
         private BasicNetwork network;
         private IActivationFunction activationFunction = null;
         private double learningRate = 0.00001;
         private double theMomentum = 0.0005;
         private bool hasBias = true;
 
+        public IMLDataSet TestSet
+        {
+            get
+            {
+                return testSet;
+            }
+
+            set
+            {
+                testSet = value;
+            }
+        }
         public IMLDataSet TrainingSet
         {
             get
@@ -96,7 +109,7 @@ namespace SNP1
                 activationFunction = value;
             }
         }
-
+       
 
         public SimpleNeuralNetwork()
         { Network = new BasicNetwork(); }
@@ -145,7 +158,7 @@ namespace SNP1
             }
         }
 
-        public IEnumerable<IResult> StartLearning(int iterationCount)
+        public void StartLearning(int iterationCount)
         {
             this.Network.Structure.FinalizeStructure();
             Network.Reset();
@@ -162,7 +175,15 @@ namespace SNP1
                 epoch++;
             } while (epoch < iterationCount);
 
+        }
 
+
+        public IEnumerable<IResult> ComputeTrainingSet()
+        {
+            if (TrainingSet == null)
+                yield break;
+
+            IOutput writer = MyCore.Resolve<IOutput>();
 
             foreach (IMLDataPair pair in TrainingSet)
             {
@@ -171,6 +192,6 @@ namespace SNP1
                 yield return new Result() { Input = pair, Output = output };
             }
         }
-        
+
     }
 }

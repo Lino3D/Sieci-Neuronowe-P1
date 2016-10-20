@@ -26,8 +26,8 @@ namespace SNP1.DataHelper
             myNetwork.AddLayer(2);
             myNetwork.AddLayerBunch(8, 3);
             myNetwork.AddLayer(1);
-
-            ErrorCalculator.CalculateError(myNetwork.StartLearning(interations).ToList(), myNetwork);
+            myNetwork.StartLearning(interations);
+            ErrorCalculator.CalculateError(myNetwork.ComputeTrainingSet().ToList(), myNetwork);
         }
         public static void InitializeSimpleNetwork( )
         {
