@@ -59,6 +59,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Resource\datatrain.csv" />
+    <None Include="Resource\datatrainNormalized.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SNP1\SNP1.csproj">
