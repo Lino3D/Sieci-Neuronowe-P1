@@ -104,7 +104,7 @@ namespace WinAppV2.ViewModels
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             points = (new ImportDataPointSets(csvPath).DataPoints);
-            Network.InitializeTrainingSet(points);
+    //      Network.InitializeTrainingSet(points);
             ProgramController.SetBiPolarActivation(Network);
 
             Network.AddLayer(2);

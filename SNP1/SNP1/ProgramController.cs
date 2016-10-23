@@ -21,17 +21,17 @@ namespace SNP1.DataHelper
             List<DataPointCls> points = (new ImportDataPointSets(csvPath).DataPoints);
 
             SimpleNeuralNetwork myNetwork = new SimpleNeuralNetwork();
-            myNetwork.InitializeTrainingSet(points);
+            myNetwork.InitializeTrainingSet(points,4);
             myNetwork.ActivationFunction = new ActivationBiPolar();
             myNetwork.AddLayer(2);
             myNetwork.AddLayerBunch(8, 3);
-            myNetwork.AddLayer(1);
+            myNetwork.AddLayer(4);
             myNetwork.StartLearning(interations);
             ErrorCalculator.CalculateError(myNetwork.ComputeTrainingSet().ToList(), myNetwork);
         }
         public static void InitializeSimpleNetwork( )
         {
-            InitializeSimpleNetwork(10000);
+            InitializeSimpleNetwork(1000);
         }
 
         public static void SetBiPolarActivation(INeuralNetwork network)

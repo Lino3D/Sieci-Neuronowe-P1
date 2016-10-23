@@ -24,6 +24,6 @@ namespace SNP1.Models.Interfaces
         void AddLayerBunch(int layerCount, int neuronCount);
         void StartLearning(int iterationCount);
         IEnumerable<IResult> ComputeTrainingSet();
-        void InitializeTrainingSet(List<DataPointCls> points);
+        void InitializeTrainingSet(List<DataPointCls> points, int i);
     }
 }
