@@ -111,10 +111,10 @@ namespace WinAppV2.ViewModels
             Network.AddLayerBunch(8, 3);
             Network.AddLayer(1);
 
-            Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
-            newWindowThread.SetApartmentState(ApartmentState.STA);
-            newWindowThread.IsBackground = true;
-            newWindowThread.Start();
+            //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
+            //newWindowThread.SetApartmentState(ApartmentState.STA);
+            //newWindowThread.IsBackground = true;
+            //newWindowThread.Start();
 
             //  ErrorCalculator.CalculateError(Network.StartLearning(Iterations).ToList(), Network);
             Network.StartLearning(Iterations);
