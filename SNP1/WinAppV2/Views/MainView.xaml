@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WinAppV2.Views"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:cal="http://www.caliburnproject.org"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="MainView" Height="527.273" Width="738.636">
     <Grid>
@@ -45,17 +46,38 @@
             </WrapPanel>
 
         </StackPanel>
-        <StackPanel Grid.Row="3" >
-            <Label x:Name="label" Content="Console:"/>
-            <RichTextBox x:Name="richTextBox" Height="200" >
-                <FlowDocument>
-                    <Paragraph>
-                        <Run Text="{Binding Console, Mode=TwoWay}"/>
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox>
 
-        </StackPanel>
+        <TabControl Grid.Row="2" x:Name="tabControl">
+            <TabItem Header="Console">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="1" x:Name="consolePanel"  >
+                        <Label x:Name="label" Content="Console:"/>
+                        <RichTextBox x:Name="richTextBox" VerticalScrollBarVisibility="Visible" Height="200">
+                            <FlowDocument>
+                                <Paragraph>
+                                    <Run Text="{Binding Console, Mode=TwoWay}"/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Learning graph">
+                <Grid Background="#FFE5E5E5">
+                    <oxy:PlotView Model="{Binding LearningProcessModel, Mode=TwoWay}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Class Graph">
+            <Grid Background="#FFE5E5E5">
+                <oxy:PlotView Model="{Binding ClassModel, Mode=TwoWay}"/>
+            </Grid>
+        </TabItem>
+        </TabControl>
+
+
 
     </Grid>
 </Window>

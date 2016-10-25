@@ -14,5 +14,11 @@ namespace WinAppV2.ViewModels
         {
             PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        protected void RaisePropertyChanged(object sender, string propertyName)
+        {
+            PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
+        }
+
+
     }
 }

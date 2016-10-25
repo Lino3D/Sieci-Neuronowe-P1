@@ -1,4 +1,7 @@
 ﻿using Caliburn.Micro;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using SNP1;
 using SNP1.DataHelper;
 using SNP1.EPPlus;
@@ -17,6 +20,11 @@ namespace WinAppV2.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        public MainViewModel()
+        {
+           
+        }
+
         public double LearningRate
         {
             get
@@ -82,15 +90,47 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("MomentumRate");
             }
         }
+        private PlotModel classModel;
+
+        public PlotModel LearningProcessModel
+        {
+            get
+            {
+                return learningProcessModel;
+            }
+
+            set
+            {
+               
+                learningProcessModel = value;
+                OnPropertyChanged("LearningProcessModel");
+            }
+        }
+
+        public PlotModel ClassModel
+        {
+            get
+            {
+                return classModel;
+            }
+
+            set
+            {
+                classModel = value;
+                OnPropertyChanged("ClassModel");
+            }
+        }
 
         private double learningRate = 0.0005;
         private double momentumRate = 0.0005;
         private int iterations = 100;
         private bool bias = true;
         private string console;
+        private PlotModel learningProcessModel;
 
         private SimpleNeuralNetwork Network;
-        private List<DataPointCls> points;
+        private List<DataPointCls> DataPoints;
+        private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -101,15 +141,16 @@ namespace WinAppV2.ViewModels
 
         public void Run()
         {
+         
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
-            points = (new ImportDataPointSets(csvPath).DataPoints);
-    //      Network.InitializeTrainingSet(points);
+            DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
+            Network.InitializeTrainingSet(DataPoints,4);
             ProgramController.SetBiPolarActivation(Network);
 
             Network.AddLayer(2);
-            Network.AddLayerBunch(8, 3);
-            Network.AddLayer(1);
+            Network.AddLayerBunch(2, 4);
+            Network.AddLayer(4);
 
             //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
             //newWindowThread.SetApartmentState(ApartmentState.STA);
@@ -118,9 +159,56 @@ namespace WinAppV2.ViewModels
 
             //  ErrorCalculator.CalculateError(Network.StartLearning(Iterations).ToList(), Network);
             Network.StartLearning(Iterations);
+            LearningProcess = Network.learningProcess;
+            DrawLearningRate();
 
-            ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
+            var result = Network.ComputeTrainingSet().ToList();
+            //ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
 
+        }
+
+        public void DrawLearningRate()
+        {
+            LearningProcessModel = new PlotModel { Title = "Learning Rate" };
+
+            var lineSeries = new LineSeries();
+
+            foreach(IterationError e in LearningProcess)
+            {
+                lineSeries.Points.Add(new OxyPlot.DataPoint(e.Iteration1, e.Error1));
+            }
+           LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 2 });
+            LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
+            LearningProcessModel.Series.Add(lineSeries);
+            
+        }
+
+        public void DrawShit()
+        {
+            ClassModel= new PlotModel { Title = "Class Model" };
+
+            
+        }
+
+        public double ReturnMaxX(List<DataPointCls> list)
+        {
+            double maxX = 0;
+            foreach(var x in list)
+            {
+                if (x.X > maxX)
+                    maxX = x.X;
+            }
+            return maxX;
+        }
+        public double ReturnMaxY(List<DataPointCls> list)
+        {
+            double maxY = 0;
+            foreach (var x in list)
+            {
+                if (x.Y > maxY)
+                    maxY = x.X;
+            }
+            return maxY;
         }
 
         private void ThreadStartingPoint()

@@ -68,6 +68,7 @@
     <Compile Include="CsvOperations\Maps\DataPointClsMap.cs" />
     <Compile Include="CsvOperations\Maps\DataPointMap.cs" />
     <Compile Include="DataHelper\ErrorCalculator.cs" />
+    <Compile Include="Models\IterationError.cs" />
     <Compile Include="MyCore.cs" />
     <Compile Include="Models\Interfaces\INeuralNetwork.cs" />
     <Compile Include="Models\DataPoint.cs" />

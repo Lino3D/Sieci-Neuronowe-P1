@@ -27,6 +27,8 @@ namespace SNP1
         private bool hasBias = false;
         private int outputSize;
 
+        public List<IterationError> learningProcess;
+
         public IMLDataSet TestSet
         {
             get
@@ -189,6 +191,8 @@ namespace SNP1
 
         public void StartLearning(int iterationCount)
         {
+            this.learningProcess = new List<IterationError>();
+
             this.Network.Structure.FinalizeStructure();
             Network.Reset();
             IOutput writer = MyCore.Resolve<IOutput>();
@@ -202,9 +206,14 @@ namespace SNP1
                 train.Iteration();
                 writer.Write(String.Format(@"Epoch # {0} Error: {1}", epoch, train.Error));
                 epoch++;
+                this.learningProcess.Add(new IterationError(epoch, train.Error));
+                
             } while (epoch < iterationCount);
 
         }
+
+        
+
 
 
         public IEnumerable<IResult> ComputeTrainingSet()
