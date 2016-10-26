@@ -1,4 +1,9 @@
 ﻿using Caliburn.Micro;
+using Encog.App.Analyst;
+using Encog.App.Analyst.CSV.Normalize;
+using Encog.App.Analyst.Script.Normalize;
+using Encog.App.Analyst.Wizard;
+using Encog.Util.CSV;
 using Microsoft.Win32;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -7,15 +12,9 @@ using SNP1;
 using SNP1.DataHelper;
 using SNP1.EPPlus;
 using SNP1.Models;
-using SNP1.Models.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using WinAppV2.Views;
 
 namespace WinAppV2.ViewModels
 {
@@ -23,7 +22,6 @@ namespace WinAppV2.ViewModels
     {
         public MainViewModel()
         {
-           
         }
 
         public double LearningRate
@@ -39,6 +37,7 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("LearningRate");
             }
         }
+
         public int Iterations
         {
             get
@@ -52,6 +51,7 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("Iterations");
             }
         }
+
         public bool Bias
         {
             get
@@ -65,6 +65,7 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("Bias");
             }
         }
+
         public string Console
         {
             get
@@ -78,6 +79,7 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("Console");
             }
         }
+
         public double MomentumRate
         {
             get
@@ -91,6 +93,7 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("MomentumRate");
             }
         }
+
         private PlotModel classModel;
 
         public PlotModel LearningProcessModel
@@ -102,7 +105,6 @@ namespace WinAppV2.ViewModels
 
             set
             {
-               
                 learningProcessModel = value;
                 OnPropertyChanged("LearningProcessModel");
             }
@@ -191,6 +193,7 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("Neurons");
             }
         }
+
         public bool TestLoadedChecked
         {
             get
@@ -205,6 +208,20 @@ namespace WinAppV2.ViewModels
             }
         }
 
+        public PlotModel RegressionModel
+        {
+            get
+            {
+                return regressionModel;
+            }
+
+            set
+            {
+                regressionModel = value;
+                OnPropertyChanged("RegressionModel");
+
+            }
+        }
 
         private bool testLoadedChecked = false;
         private int neurons = 10;
@@ -220,14 +237,15 @@ namespace WinAppV2.ViewModels
         private bool bias = true;
         private string console;
         private PlotModel learningProcessModel;
+        private PlotModel regressionModel;
 
         private SimpleNeuralNetwork Network;
         private List<DataPointCls> DataPoints;
-        private List<SNP1.Models.DataPoint> DataPointsRegression;      
+        private List<SNP1.Models.DataPoint> DataPointsRegression;
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
         private string csvPathTest = @"..\..\Resource\datatrain.csv";
-
+        private static string csvPathNormalized = @"..\..\Resource\datatrainNormalized.csv";
         public ResultsList resultList;
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -235,15 +253,46 @@ namespace WinAppV2.ViewModels
         //{
         //    PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         //}
+       
+
+        public  void NormalizeData()
+        {
+            var toNormalize = new FileInfo(csvPath);
+            var Normalized = new FileInfo(csvPathNormalized);
+            var analyst = new EncogAnalyst();
+
+
+            var wizard = new AnalystWizard(analyst);
+
+            wizard.Wizard(toNormalize, true, AnalystFileFormat.DecpntComma);
+
+            var norm = new AnalystNormalizeCSV();
+            norm.Analyze(toNormalize, true, CSVFormat.English, analyst);
+            foreach (AnalystField field in analyst.Script.Normalize.NormalizedFields)
+            {
+                field.NormalizedHigh = 1;
+                field.NormalizedLow = -1;
+                field.Action = Encog.Util.Arrayutil.NormalizationAction.Normalize;
+                if (field.Name == "cls")
+                    field.Action = Encog.Util.Arrayutil.NormalizationAction.PassThrough;
+            }
+
+
+            norm.ProduceOutputHeaders = true;
+            norm.Normalize(Normalized);
+        }
+
+
+
 
         public void Run()
         {
-          
+            NormalizeData();
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             if (isRegression == false)
             {
-                DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
+                DataPoints = (new ImportDataPointSets(csvPathNormalized).DataPoints);
                 Network.InitializeTrainingSet(DataPoints, 4);
                 Network.AddLayer(2);
                 Network.AddLayerBunch(Layers, Neurons);
@@ -251,7 +300,7 @@ namespace WinAppV2.ViewModels
             }
             else
             {
-                DataPointsRegression = (new ImportDataPointsSetsRegression(csvPath).DataPoints);
+                DataPointsRegression = (new ImportDataPointsSetsRegression(csvPathNormalized).DataPoints);
                 Network.InitializeTrainingSetRegression(DataPointsRegression);
                 Network.AddLayer(1);
                 Network.AddLayerBunch(Layers, Neurons);
@@ -261,7 +310,6 @@ namespace WinAppV2.ViewModels
                 Network.SetBiPolarActivation();
             else
                 Network.SetSigmoidActivation();
-       
 
             //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
             //newWindowThread.SetApartmentState(ApartmentState.STA);
@@ -276,10 +324,12 @@ namespace WinAppV2.ViewModels
             var result = Network.ComputeTrainingSet().ToList();
             //ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
             resultList = Network.resultList;
-            if(!isRegression)
-            DrawGraph();
-
+            if (!isRegression)
+                DrawGraph();
+            else
+                DrawRegressionFunction();
         }
+
         public void LoadDataTest()
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -291,17 +341,18 @@ namespace WinAppV2.ViewModels
             else
                 TestLoadedChecked = false;
         }
+
         public void LoadData()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            if( ofd.ShowDialog() == true)
+            if (ofd.ShowDialog() == true)
             {
                 csvPath = ofd.FileName;
+                csvPathNormalized = ofd.FileName.TrimEnd(".csv".ToCharArray())+"Normalized.csv";
                 DataLoadedChecked = true;
-
             }
             else
-            DataLoadedChecked = false;
+                DataLoadedChecked = false;
         }
 
         public void DrawLearningRate()
@@ -310,24 +361,33 @@ namespace WinAppV2.ViewModels
 
             var lineSeries = new LineSeries();
 
-            foreach(IterationError e in LearningProcess)
+            foreach (IterationError e in LearningProcess)
             {
                 lineSeries.Points.Add(new OxyPlot.DataPoint(e.Iteration1, e.Error1));
             }
-           LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 2 });
-           LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
-           LearningProcessModel.Series.Add(lineSeries);
-            
+            LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 2 });
+            LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
+            LearningProcessModel.Series.Add(lineSeries);
+        }
+
+        public void DrawRegressionFunction()
+        {
+            RegressionModel= new PlotModel { Title = "Regression function" };
+
+            var lineSeries = new LineSeries();
+
+            for (int i = 0; i < resultList.Count; i++)
+            {
+                lineSeries.Points.Add(new OxyPlot.DataPoint(resultList.ListX[i], resultList.ListY[i]));
+            }
+            RegressionModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 2 });
+            RegressionModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
+            RegressionModel.Series.Add(lineSeries);
         }
 
         public void DrawGraph()
         {
-
-
-
-
-            ClassModel= new PlotModel { Title = "Class Model" };
-
+            ClassModel = new PlotModel { Title = "Class Model" };
 
             var scatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle };
             for (int i = 0; i < resultList.Count; i++)
@@ -340,34 +400,13 @@ namespace WinAppV2.ViewModels
             }
             ClassModel.Series.Add(scatterSeries);
             ClassModel.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200) });
-
-            //ClassModel.Axes.Add(new OxyPlot.Axes.LinearColorAxis
-            //{
-            //    Position = OxyPlot.Axes.AxisPosition.Right,
-            //    Palette = OxyPalettes.Jet(500),
-            //    HighColor = OxyColors.Gray,
-            //    LowColor = OxyColors.Black
-            //});
-
-            //OxyPlot.Series.ContourSeries contour = new OxyPlot.Series.ContourSeries
-            //{
-            //    ColumnCoordinates = arrayFromMinToMax1,
-            //    RowCoordinates = shitList.,
-            //    ContourLevels = arrayOfLevels,
-            //    ContourColors = arrayOfColors, // Same # elements as the levels' array
-            //    Data = (Double[,])data
-            //};
-
-            //model.Series.Add(contour);
-
         }
-
 
         public int InitializeColor(double[] output)
         {
-            int color =1;
+            int color = 1;
 
-            for(int i=0;i<output.Count(); i++)
+            for (int i = 0; i < output.Count(); i++)
             {
                 if (output[i] == 1)
                 {
@@ -381,13 +420,14 @@ namespace WinAppV2.ViewModels
         public double ReturnMaxX(List<DataPointCls> list)
         {
             double maxX = 0;
-            foreach(var x in list)
+            foreach (var x in list)
             {
                 if (x.X > maxX)
                     maxX = x.X;
             }
             return maxX;
         }
+
         public double ReturnMaxY(List<DataPointCls> list)
         {
             double maxY = 0;
@@ -401,15 +441,12 @@ namespace WinAppV2.ViewModels
 
         private void ThreadStartingPoint()
         {
-
             IWindowManager manager = new WindowManager();
             //var viewModel = Activator.CreateInstance(typeof(InProgressViewModel), null);
-            var a  = manager.ShowDialog(typeof(InProgressViewModel), null, null);
+            var a = manager.ShowDialog(typeof(InProgressViewModel), null, null);
             //InProgressView tempWindow = new InProgressView();
-       //     tempWindow.Show();
+            //     tempWindow.Show();
             System.Windows.Threading.Dispatcher.Run();
-
         }
-        
     }
 }

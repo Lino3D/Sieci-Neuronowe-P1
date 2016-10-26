@@ -8,10 +8,9 @@
         Title="InProgressView" Height="386.08" Width="419.318">
     <Grid>
         <StackPanel>
-            <Image x:Name="image" Margin="10,10,10,10" Source="/WinAppV2;component/Resource/NNImage.jpg"/>
-            <!--<Label x:Name="label" Content="{Binding ProgresUczenia,Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
-            <!--<ProgressBar HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" Margin="10,10,10,10" Value="{Binding ProgressBar}"/>-->
+            <Image x:Name="image" Margin="10,10,10,10" Source="/WinAppV2;component/Resource/NNImage.jpg" />
+            <!--<Label x:Name="label" Content="{Binding ProgresUczenia,Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
+            <!--<ProgressBar HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400" Margin="10,10,10,10" Value="{Binding ProgressBar}" />-->
         </StackPanel>
-
     </Grid>
 </Window>
