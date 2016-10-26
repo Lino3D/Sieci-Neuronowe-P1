@@ -214,8 +214,8 @@ namespace WinAppV2.ViewModels
         private bool dataLoadedChecked = false;
         private bool unipolarChecked = true;
 
-        private double learningRate = 0.7;
-        private double momentumRate = 0.8;
+        private double learningRate = 0.001;
+        private double momentumRate = 0.001;
         private int iterations = 100;
         private bool bias = true;
         private string console;
