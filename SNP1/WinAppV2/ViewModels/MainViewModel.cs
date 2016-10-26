@@ -206,12 +206,12 @@ namespace WinAppV2.ViewModels
         }
 
 
-        private bool testLoadedChecked;
+        private bool testLoadedChecked = false;
         private int neurons = 10;
         private int layers = 4;
         private bool isRegression = false;
 
-        private bool dataLoadedChecked = true;
+        private bool dataLoadedChecked = false;
         private bool unipolarChecked = true;
 
         private double learningRate = 0.7;
@@ -410,5 +410,6 @@ namespace WinAppV2.ViewModels
             System.Windows.Threading.Dispatcher.Run();
 
         }
+        
     }
 }
