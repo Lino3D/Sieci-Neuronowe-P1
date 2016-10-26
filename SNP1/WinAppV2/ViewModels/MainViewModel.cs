@@ -263,8 +263,14 @@ namespace WinAppV2.ViewModels
 
 
             var wizard = new AnalystWizard(analyst);
-
+            if (isRegression)
+                wizard.TargetFieldName = "y";
+            else
+                wizard.TargetFieldName = "cls";
+            
+            //toNormalize.
             wizard.Wizard(toNormalize, true, AnalystFileFormat.DecpntComma);
+           
 
             var norm = new AnalystNormalizeCSV();
             norm.Analyze(toNormalize, true, CSVFormat.English, analyst);
