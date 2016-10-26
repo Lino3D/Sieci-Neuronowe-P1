@@ -18,46 +18,38 @@
 
         <StackPanel Grid.Row="1" Margin="10,0,10,0">
             <WrapPanel Style="{StaticResource wrapStyle}">
-                <Label x:Name="LeraningRateLabel" Content="Learning Rate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <xctk:DoubleUpDown Value="{Binding LearningRate,Mode=TwoWay}" Width="70" Increment=".001" Minimum="0.000001" Maximum="10" Margin="10,5,10,0"/>
+                <Label x:Name="LeraningRateLabel" Content="Learning Rate" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:DoubleUpDown Value="{Binding LearningRate,Mode=TwoWay}" Width="70" Increment=".001" Minimum="0.000001" Maximum="10" Margin="10,5,10,0" />
 
-                <Label x:Name="InertiaLabel" Content="Inertia Rate" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <xctk:DoubleUpDown Value="{Binding MomentumRate,Mode=TwoWay}" Width="70" Increment=".001" Minimum="0.000001" Maximum="10" Margin="10,5,10,0"/>
+                <Label x:Name="InertiaLabel" Content="Inertia Rate" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:DoubleUpDown Value="{Binding MomentumRate,Mode=TwoWay}" Width="70" Increment=".001" Minimum="0.000001" Maximum="10" Margin="10,5,10,0" />
 
-                <Label x:Name="IterationsLabel" Content="Iterations" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <xctk:IntegerUpDown Value="{Binding Iterations,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,5,10,0"/>
+                <Label x:Name="IterationsLabel" Content="Iterations" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding Iterations,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,5,10,0" />
                 <Label Content="Bias:" />
-                <CheckBox x:Name="BiasCheckbox" Content="{Binding Bias,Mode=TwoWay}" IsChecked="{Binding Bias, Mode=TwoWay}"  Margin="10,0,10,0"/>
+                <CheckBox x:Name="BiasCheckbox" Content="{Binding Bias,Mode=TwoWay}" IsChecked="{Binding Bias, Mode=TwoWay}"  Margin="10,0,10,0" />
             </WrapPanel>
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Label>Activation:</Label>
-                <RadioButton x:Name="ActivationUnipolar" Content="Unipolar" IsChecked="{Binding UnipolarChecked,Mode=TwoWay}" Margin="0,0,10,0"/>
-                <RadioButton x:Name="ActivationBipolar" Content="Bipolar"/>
-                <Label x:Name="label1" Content="Liczba warstw:" Margin="10,0,0,0"/>
-                <xctk:IntegerUpDown Value="{Binding Layers,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,0,10,0"/>
-                <Label x:Name="label2" Content="Liczba neuronów:"/>
-                <xctk:IntegerUpDown Value="{Binding Neurons,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,0,10,0"/>
-
+                <RadioButton x:Name="ActivationUnipolar" Content="Unipolar" IsChecked="{Binding UnipolarChecked,Mode=TwoWay}" Margin="0,0,10,0" />
+                <RadioButton x:Name="ActivationBipolar" Content="Bipolar" />
+                <Label x:Name="label1" Content="Liczba warstw:" Margin="10,0,0,0" />
+                <xctk:IntegerUpDown Value="{Binding Layers,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,0,10,0" />
+                <Label x:Name="label2" Content="Liczba neuronów:" />
+                <xctk:IntegerUpDown Value="{Binding Neurons,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,0,10,0" />
             </WrapPanel>
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Label>Liczba warstw i nerunów:</Label>
             </WrapPanel>
 
-
-
             <WrapPanel Style="{StaticResource wrapStyle}">
-                <Button x:Name="sdf" Content="Start" HorizontalAlignment="Left" cal:Message.Attach="Run"    VerticalAlignment="Top" Width="75"/>
-                <CheckBox x:Name="IsRegression" Content="Regression" Margin="10,0,0,0"/>
+                <Button x:Name="sdf" Content="Start" HorizontalAlignment="Left" cal:Message.Attach="Run"    VerticalAlignment="Top" Width="75" />
+                <CheckBox x:Name="IsRegression" Content="Regression" Margin="10,0,0,0" />
                 <Button x:Name="button" Content="Load Training Set" HorizontalAlignment="Left" cal:Message.Attach="LoadData" Grid.RowSpan="2" VerticalAlignment="Top" Width="115" Margin="10,0,0,0" />
-                <CheckBox x:Name="DataLoadedChecked" Content="" IsEnabled="False" Margin="10,0,10,0"/>
+                <CheckBox x:Name="DataLoadedChecked" Content="" IsEnabled="False" Margin="10,0,10,0" />
                 <Button x:Name="button2" Content="Load Test Set" HorizontalAlignment="Left" cal:Message.Attach="LoadDataTest" Grid.RowSpan="2" VerticalAlignment="Top" Width="115" Margin="10,0,0,0" />
-                <CheckBox x:Name="TestLoadedChecked" Content="" IsEnabled="False" Margin="10,0,10,0"/>
-                
-
-
-
+                <CheckBox x:Name="TestLoadedChecked" Content="" IsEnabled="False" Margin="10,0,10,0" />
             </WrapPanel>
-
         </StackPanel>
 
         <TabControl Grid.Row="2" x:Name="tabControl">
@@ -66,12 +58,12 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="1" x:Name="consolePanel"  >
-                        <Label x:Name="label" Content="Console:"/>
+                    <StackPanel Grid.Row="1" x:Name="consolePanel">
+                        <Label x:Name="label" Content="Console:" />
                         <RichTextBox x:Name="richTextBox" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Left" Height="256">
                             <FlowDocument>
                                 <Paragraph>
-                                    <Run Text="{Binding Console, Mode=TwoWay}"/>
+                                    <Run Text="{Binding Console, Mode=TwoWay}" />
                                 </Paragraph>
                             </FlowDocument>
                         </RichTextBox>
@@ -80,19 +72,19 @@
             </TabItem>
             <TabItem Header="Learning graph">
                 <Grid Background="#FFE5E5E5">
-                    <oxy:PlotView Model="{Binding LearningProcessModel, Mode=TwoWay}"/>
+                    <oxy:PlotView Model="{Binding LearningProcessModel, Mode=TwoWay}" />
                 </Grid>
             </TabItem>
             <TabItem Header="Class Graph">
             <Grid Background="#FFE5E5E5">
-                <oxy:PlotView Model="{Binding ClassModel, Mode=TwoWay}"/>
+                <oxy:PlotView Model="{Binding ClassModel, Mode=TwoWay}" />
             </Grid>
         </TabItem>
+            <TabItem Header="Regression Graph">
+                <Grid Background="#FFE5E5E5">
+                    <oxy:PlotView Model="{Binding RegressionModel, Mode=TwoWay}" />
+                </Grid>
+            </TabItem>
         </TabControl>
-        
-
-
-
     </Grid>
 </Window>
-

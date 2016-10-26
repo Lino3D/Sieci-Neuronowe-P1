@@ -264,10 +264,14 @@ namespace SNP1
         private void AddToResults(IMLDataPair pair, IMLData output)
         {
             resultList.ListX.Add(pair.Input[0]);
-            if(Regression==false)
-            resultList.ListY.Add(pair.Input[1]);
-            resultList.ListIdealOutput.Add(IMDataToDoubleArray(pair.Ideal));
-            resultList.ListActualOutput.Add(IMDataToDoubleArray(output));
+            if (Regression == false)
+            {
+                resultList.ListY.Add(pair.Input[1]);
+                resultList.ListIdealOutput.Add(IMDataToDoubleArray(pair.Ideal));
+                resultList.ListActualOutput.Add(IMDataToDoubleArray(output));
+            }
+            else
+                resultList.ListY.Add(output[0]);
             resultList.Count++;
         }
 
