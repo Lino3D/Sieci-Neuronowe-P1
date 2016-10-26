@@ -192,12 +192,28 @@ namespace WinAppV2.ViewModels
             }
         }
 
+        public bool TestLoadedChecked
+        {
+            get
+            {
+                return testLoadedChecked;
+            }
+
+            set
+            {
+                testLoadedChecked = value;
+                OnPropertyChanged("TestLoadedChecked");
+            }
+        }
+
+        private bool testLoadedChecked;
+
         private int neurons = 10;
         private int layers = 4;
         private bool isRegression = false;
 
-        private bool dataLoadedChecked = true;
-        private bool unipolarChecked = true;
+        private bool dataLoadedChecked = false;
+        private bool unipolarChecked = false;
 
         private double learningRate = 0.7;
         private double momentumRate = 0.8;
@@ -211,6 +227,7 @@ namespace WinAppV2.ViewModels
         private List<SNP1.Models.DataPoint> DataPointsRegression;      
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
+        private string csvPathTest = @"..\..\Resource\datatrain.csv";
 
         public ResultsList resultList;
 
@@ -228,9 +245,9 @@ namespace WinAppV2.ViewModels
             DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
             Network.InitializeTrainingSet(DataPoints,4);
             if (!UnipolarChecked)
-                ProgramController.SetBiPolarActivation(Network);
+                Network.SetBiPolarActivation();
             else
-                ProgramController.SetSigmoidActivation(Network);
+                Network.SetSigmoidActivation();            
             Network.AddLayer(2);
             Network.AddLayerBunch(Layers, Neurons);
             Network.AddLayer(4);
@@ -250,6 +267,17 @@ namespace WinAppV2.ViewModels
             resultList = Network.resultList;
             DrawGraph();
 
+        }
+        public void LoadDataTest()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == true)
+            {
+                csvPathTest = ofd.FileName;
+                TestLoadedChecked = true;
+            }
+            else
+                TestLoadedChecked = false;
         }
 
         public void LoadData()

@@ -85,12 +85,13 @@ namespace SNP1.DataHelper
             InitializeSimpleNetwork(4000);
         }
 
-        public static void SetBiPolarActivation(INeuralNetwork network)
+        public static void SetBiPolarActivation(this INeuralNetwork network)
         {
             network.ActivationFunction = new ActivationBiPolar();
         }
+        
 
-        public static void SetSigmoidActivation( INeuralNetwork network)
+        public static void SetSigmoidActivation(this INeuralNetwork network)
         {
             network.ActivationFunction = new ActivationSigmoid();
         }
