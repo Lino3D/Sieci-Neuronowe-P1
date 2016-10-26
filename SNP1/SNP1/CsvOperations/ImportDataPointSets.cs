@@ -27,6 +27,7 @@ namespace SNP1.EPPlus
         {
             using (var streamReader = File.OpenText(this.DataPath))
             {
+               
                 var reader = new CsvReader(streamReader);
                 reader.Configuration.RegisterClassMap<DataPointClsMap>();
                 var dataPoints = reader.GetRecords<DataPointCls>().ToList();

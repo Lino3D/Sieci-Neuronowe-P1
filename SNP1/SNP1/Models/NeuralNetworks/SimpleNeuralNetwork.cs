@@ -163,6 +163,21 @@ namespace SNP1
 
             this.TrainingSet = new BasicMLDataSet(input, idealOutput);
         }
+        public void InitializeTrainingSetRegression(List<DataPoint> points)
+        {
+            double[][] input = new double[points.Count][];
+            for (int i = 0; i < points.Count; i++)
+            {
+                input[i] = new[] { points[i].X};
+            }
+
+            double[][] idealOutput = new double[points.Count][];
+            for (int i = 0; i < points.Count; i++)
+            {
+                idealOutput[i] = new[] { points[i].Y };
+            }
+            this.TrainingSet = new BasicMLDataSet(input, idealOutput);
+        }
 
         private double[] GetExpectedOutput(int cls, int MaxClass)
         {
