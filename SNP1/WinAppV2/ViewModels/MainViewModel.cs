@@ -146,10 +146,57 @@ namespace WinAppV2.ViewModels
             set
             {
                 dataLoadedChecked = value;
+                OnPropertyChanged("DataLoadedChecked");
             }
         }
 
-        private bool dataLoadedChecked = false;
+        public bool IsRegression
+        {
+            get
+            {
+                return isRegression;
+            }
+
+            set
+            {
+                isRegression = value;
+                OnPropertyChanged("IsRegression");
+            }
+        }
+
+        public int Layers
+        {
+            get
+            {
+                return layers;
+            }
+
+            set
+            {
+                layers = value;
+                OnPropertyChanged("Layers");
+            }
+        }
+
+        public int Neurons
+        {
+            get
+            {
+                return neurons;
+            }
+
+            set
+            {
+                neurons = value;
+                OnPropertyChanged("Neurons");
+            }
+        }
+
+        private int neurons = 10;
+        private int layers = 4;
+        private bool isRegression = false;
+
+        private bool dataLoadedChecked = true;
         private bool unipolarChecked = true;
 
         private double learningRate = 0.7;
@@ -174,7 +221,7 @@ namespace WinAppV2.ViewModels
 
         public void Run()
         {
-         
+          
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
@@ -184,7 +231,7 @@ namespace WinAppV2.ViewModels
             else
                 ProgramController.SetSigmoidActivation(Network);
             Network.AddLayer(2);
-            Network.AddLayerBunch(5, 8);
+            Network.AddLayerBunch(Layers, Neurons);
             Network.AddLayer(4);
 
             //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
@@ -200,7 +247,7 @@ namespace WinAppV2.ViewModels
             var result = Network.ComputeTrainingSet().ToList();
             //ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
             resultList = Network.resultList;
-            DrawShit();
+            DrawGraph();
 
         }
 
@@ -213,6 +260,7 @@ namespace WinAppV2.ViewModels
                 DataLoadedChecked = true;
 
             }
+            else
             DataLoadedChecked = false;
         }
 
@@ -232,7 +280,7 @@ namespace WinAppV2.ViewModels
             
         }
 
-        public void DrawShit()
+        public void DrawGraph()
         {
 
 

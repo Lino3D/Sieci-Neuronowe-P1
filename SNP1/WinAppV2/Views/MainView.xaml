@@ -26,12 +26,18 @@
 
                 <Label x:Name="IterationsLabel" Content="Iterations" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <xctk:IntegerUpDown Value="{Binding Iterations,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,5,10,0"/>
+                <Label Content="Bias:" />
                 <CheckBox x:Name="BiasCheckbox" Content="{Binding Bias,Mode=TwoWay}" IsChecked="{Binding Bias, Mode=TwoWay}"  Margin="10,0,10,0"/>
             </WrapPanel>
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Label>Activation:</Label>
                 <RadioButton x:Name="ActivationUnipolar" Content="Unipolar" IsChecked="{Binding UnipolarChecked,Mode=TwoWay}" Margin="0,0,10,0"/>
                 <RadioButton x:Name="ActivationBipolar" Content="Bipolar"/>
+                <Label x:Name="label1" Content="Liczba warstw:" Margin="10,0,0,0"/>
+                <xctk:IntegerUpDown Value="{Binding Layers,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,0,10,0"/>
+                <Label x:Name="label2" Content="Liczba neuronów:"/>
+                <xctk:IntegerUpDown Value="{Binding Neurons,Mode=TwoWay}" Minimum="0" Width="70" Margin="10,0,10,0"/>
+
             </WrapPanel>
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Label>Liczba warstw i nerunów:</Label>
@@ -41,8 +47,10 @@
 
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Button x:Name="sdf" Content="Start" HorizontalAlignment="Left" cal:Message.Attach="Run"    VerticalAlignment="Top" Width="75"/>
-                <Button x:Name="button" Content="Load Data" HorizontalAlignment="Left" cal:Message.Attach="LoadData" Grid.RowSpan="2" VerticalAlignment="Top" Width="75" Margin="10,0,0,0" />
-                <CheckBox x:Name="checkBox" Content="Data Loaded" IsChecked="{Binding DataLoadedChecked,Mode=TwoWay}" Margin="10,0,0,0"/>
+                <CheckBox x:Name="IsRegression" Content="Regression" Margin="10,0,0,0"/>
+                <Button x:Name="button" Content="Load Training Set" HorizontalAlignment="Left" cal:Message.Attach="LoadData" Grid.RowSpan="2" VerticalAlignment="Top" Width="115" Margin="10,0,0,0" />
+                <CheckBox x:Name="DataLoadedChecked" Content="Loaded" IsEnabled="False" Margin="10,0,10,0"/>
+                
 
 
 
