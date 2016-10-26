@@ -178,16 +178,38 @@ namespace WinAppV2.ViewModels
                 lineSeries.Points.Add(new OxyPlot.DataPoint(e.Iteration1, e.Error1));
             }
            LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 2 });
-            LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
-            LearningProcessModel.Series.Add(lineSeries);
+           LearningProcessModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
+           LearningProcessModel.Series.Add(lineSeries);
             
         }
 
-        public void DrawShit()
+        public void DrawShit(List<SNP1.Models.IResult> shitList)
         {
-            ClassModel= new PlotModel { Title = "Class Model" };
 
-            
+
+
+
+            //ClassModel= new PlotModel { Title = "Class Model" };
+
+            //ClassModel.Axes.Add(new OxyPlot.Axes.LinearColorAxis
+            //{
+            //    Position = OxyPlot.Axes.AxisPosition.Right,
+            //    Palette = OxyPalettes.Jet(500),
+            //    HighColor = OxyColors.Gray,
+            //    LowColor = OxyColors.Black
+            //});
+
+            //OxyPlot.Series.ContourSeries contour = new OxyPlot.Series.ContourSeries
+            //{
+            //    ColumnCoordinates = arrayFromMinToMax1,
+            //    RowCoordinates = shitList.,
+            //    ContourLevels = arrayOfLevels,
+            //    ContourColors = arrayOfColors, // Same # elements as the levels' array
+            //    Data = (Double[,])data
+            //};
+
+            //model.Series.Add(contour);
+
         }
 
         public double ReturnMaxX(List<DataPointCls> list)

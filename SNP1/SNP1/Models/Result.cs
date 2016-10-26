@@ -11,6 +11,7 @@ namespace SNP1.Models
     public class Result : IResult
     {
         private IMLDataPair input;
+        private IMLData output;
 
         public IMLDataPair Input
         {
@@ -38,6 +39,6 @@ namespace SNP1.Models
             }
         }
 
-        private IMLData output;
+       
     }
 }

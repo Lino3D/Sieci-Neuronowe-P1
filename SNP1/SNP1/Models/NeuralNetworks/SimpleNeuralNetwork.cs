@@ -27,6 +27,9 @@ namespace SNP1
         private bool hasBias = false;
         private int outputSize;
 
+        public ResultsList resultList;
+
+
         public List<IterationError> learningProcess;
 
         public IMLDataSet TestSet
@@ -191,6 +194,8 @@ namespace SNP1
 
         public void StartLearning(int iterationCount)
         {
+            this.resultList = new ResultsList();
+
             this.learningProcess = new List<IterationError>();
 
             this.Network.Structure.FinalizeStructure();
@@ -227,9 +232,33 @@ namespace SNP1
             {
                 IMLData output = Network.Compute(pair.Input);
                 writer.Write(String.Format(@"{0},{1}, actual={2},ideal={3}", pair.Input[0], pair.Input[1], GetOutput(output), GetClass(pair.Ideal)));
+                AddToResults(pair, output);
+
                 yield return new Result() { Input = pair, Output = output };
             }
         }
+
+        private void AddToResults(IMLDataPair pair, IMLData output)
+        {
+            resultList.ListX.Add(pair.Input[0]);
+            resultList.ListY.Add(pair.Input[1]);
+            resultList.ListIdealOutput.Add(IMDataToDoubleArray(pair.Ideal));
+            resultList.ListActualOutput.Add(IMDataToDoubleArray(output));
+        }
+
+        private double[] IMDataToDoubleArray(IMLData d)
+        {
+            double[] array = new double[d.Count];
+            for(int i=0; i<d.Count; i++)
+            {
+                array[i] = d[i];
+            }
+
+            return array;
+
+
+        }
+
         private string GetOutput(IMLData lst)
         {
             string ret = " [Ouput: ";
