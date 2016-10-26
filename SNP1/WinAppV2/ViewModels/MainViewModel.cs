@@ -133,6 +133,8 @@ namespace WinAppV2.ViewModels
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
 
+        public ResultsList resultList;
+
         //public event PropertyChangedEventHandler PropertyChanged;
         //protected void OnPropertyChanged(string propertyName)
         //{
@@ -164,6 +166,8 @@ namespace WinAppV2.ViewModels
 
             var result = Network.ComputeTrainingSet().ToList();
             //ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
+            resultList = Network.resultList;
+            DrawShit();
 
         }
 
@@ -183,13 +187,26 @@ namespace WinAppV2.ViewModels
             
         }
 
-        public void DrawShit(List<SNP1.Models.IResult> shitList)
+        public void DrawShit()
         {
 
 
 
 
-            //ClassModel= new PlotModel { Title = "Class Model" };
+            ClassModel= new PlotModel { Title = "Class Model" };
+
+
+            var scatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle };
+            for (int i = 0; i < resultList.Count; i++)
+            {
+                var x = resultList.ListX[i];
+                var y = resultList.ListY[i];
+                var size = 5;
+                var colorValue = InitializeColor(resultList.ListActualOutput[i]);
+                scatterSeries.Points.Add(new ScatterPoint(x, y, size, colorValue));
+            }
+            ClassModel.Series.Add(scatterSeries);
+            ClassModel.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Jet(200) });
 
             //ClassModel.Axes.Add(new OxyPlot.Axes.LinearColorAxis
             //{
@@ -210,6 +227,22 @@ namespace WinAppV2.ViewModels
 
             //model.Series.Add(contour);
 
+        }
+
+
+        public int InitializeColor(double[] output)
+        {
+            int color =1;
+
+            for(int i=0;i<output.Count(); i++)
+            {
+                if (output[i] == 1)
+                {
+                    color = i + 100;
+                }
+            }
+
+            return color;
         }
 
         public double ReturnMaxX(List<DataPointCls> list)

@@ -244,6 +244,7 @@ namespace SNP1
             resultList.ListY.Add(pair.Input[1]);
             resultList.ListIdealOutput.Add(IMDataToDoubleArray(pair.Ideal));
             resultList.ListActualOutput.Add(IMDataToDoubleArray(output));
+            resultList.Count++;
         }
 
         private double[] IMDataToDoubleArray(IMLData d)

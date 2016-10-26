@@ -8,6 +8,7 @@ namespace SNP1.Models
 {
    public class ResultsList
     {
+        public double Count = 0;
         public List<double> ListX { get; set; }
         public List<double> ListY { get; set; }
         public List<double[]> ListActualOutput { get; set; }
