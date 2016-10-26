@@ -208,6 +208,7 @@ namespace WinAppV2.ViewModels
 
         private SimpleNeuralNetwork Network;
         private List<DataPointCls> DataPoints;
+        private List<SNP1.Models.DataPoint> DataPointsRegression;      
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
 
