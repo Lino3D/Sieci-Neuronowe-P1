@@ -225,15 +225,27 @@ namespace WinAppV2.ViewModels
           
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
-            DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
-            Network.InitializeTrainingSet(DataPoints,4);
+            if (isRegression == false)
+            {
+                DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
+                Network.InitializeTrainingSet(DataPoints, 4);
+                Network.AddLayer(2);
+                Network.AddLayerBunch(Layers, Neurons);
+                Network.AddLayer(4);
+            }
+            else
+            {
+                DataPointsRegression = (new ImportDataPointsSetsRegression(csvPath).DataPoints);
+                Network.InitializeTrainingSetRegression(DataPointsRegression);
+                Network.AddLayer(1);
+                Network.AddLayerBunch(Layers, Neurons);
+                Network.AddLayer(1);
+            }
             if (!UnipolarChecked)
                 ProgramController.SetBiPolarActivation(Network);
             else
                 ProgramController.SetSigmoidActivation(Network);
-            Network.AddLayer(2);
-            Network.AddLayerBunch(Layers, Neurons);
-            Network.AddLayer(4);
+       
 
             //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
             //newWindowThread.SetApartmentState(ApartmentState.STA);
@@ -248,6 +260,7 @@ namespace WinAppV2.ViewModels
             var result = Network.ComputeTrainingSet().ToList();
             //ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
             resultList = Network.resultList;
+            if(!isRegression)
             DrawGraph();
 
         }

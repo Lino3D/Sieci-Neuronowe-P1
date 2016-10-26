@@ -26,6 +26,8 @@ namespace SNP1
         private double theMomentum = 0.0005;
         private bool hasBias = false;
         private int outputSize;
+        private bool Regression = false;
+
 
         public ResultsList resultList;
 
@@ -149,6 +151,7 @@ namespace SNP1
 
         public void InitializeTrainingSet(List<DataPointCls> points, int MaxClass)
         {
+            Regression = false;
             double[][] input = new double[points.Count][];
             for (int i = 0; i < points.Count; i++)
             {
@@ -165,6 +168,7 @@ namespace SNP1
         }
         public void InitializeTrainingSetRegression(List<DataPoint> points)
         {
+            Regression = true;
             double[][] input = new double[points.Count][];
             for (int i = 0; i < points.Count; i++)
             {
@@ -245,8 +249,12 @@ namespace SNP1
 
             foreach (IMLDataPair pair in TrainingSet)
             {
+               
                 IMLData output = Network.Compute(pair.Input);
-                writer.Write(String.Format(@"{0},{1}, actual={2},ideal={3}", pair.Input[0], pair.Input[1], GetOutput(output), GetClass(pair.Ideal)));
+                if (!Regression)
+                    writer.Write(String.Format(@"{0},{1}, actual={2},ideal={3}", pair.Input[0], pair.Input[1], GetOutput(output), GetClass(pair.Ideal)));
+                else
+                    writer.Write(String.Format(@"{0}, actual={1},ideal={2}", pair.Input[0], output, pair.Ideal));
                 AddToResults(pair, output);
 
                 yield return new Result() { Input = pair, Output = output };
@@ -256,6 +264,7 @@ namespace SNP1
         private void AddToResults(IMLDataPair pair, IMLData output)
         {
             resultList.ListX.Add(pair.Input[0]);
+            if(Regression==false)
             resultList.ListY.Add(pair.Input[1]);
             resultList.ListIdealOutput.Add(IMDataToDoubleArray(pair.Ideal));
             resultList.ListActualOutput.Add(IMDataToDoubleArray(output));
