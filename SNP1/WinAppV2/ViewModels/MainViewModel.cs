@@ -277,7 +277,7 @@ namespace WinAppV2.ViewModels
             foreach (AnalystField field in analyst.Script.Normalize.NormalizedFields)
             {
                 field.NormalizedHigh = 1;
-                field.NormalizedLow = -1;
+                field.NormalizedLow = 0;
                 field.Action = Encog.Util.Arrayutil.NormalizationAction.Normalize;
                 if (field.Name == "cls")
                     field.Action = Encog.Util.Arrayutil.NormalizationAction.PassThrough;
