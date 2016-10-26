@@ -1,4 +1,9 @@
 ﻿using Caliburn.Micro;
+using Encog.App.Analyst;
+using Encog.App.Analyst.CSV.Normalize;
+using Encog.App.Analyst.Script.Normalize;
+using Encog.App.Analyst.Wizard;
+using Encog.Util.CSV;
 using Microsoft.Win32;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -8,6 +13,7 @@ using SNP1.DataHelper;
 using SNP1.EPPlus;
 using SNP1.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace WinAppV2.ViewModels
@@ -239,7 +245,7 @@ namespace WinAppV2.ViewModels
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
         private string csvPathTest = @"..\..\Resource\datatrain.csv";
-
+        private static string csvPathNormalized = @"..\..\Resource\datatrainNormalized.csv";
         public ResultsList resultList;
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -247,14 +253,46 @@ namespace WinAppV2.ViewModels
         //{
         //    PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         //}
+       
+
+        public  void NormalizeData()
+        {
+            var toNormalize = new FileInfo(csvPath);
+            var Normalized = new FileInfo(csvPathNormalized);
+            var analyst = new EncogAnalyst();
+
+
+            var wizard = new AnalystWizard(analyst);
+
+            wizard.Wizard(toNormalize, true, AnalystFileFormat.DecpntComma);
+
+            var norm = new AnalystNormalizeCSV();
+            norm.Analyze(toNormalize, true, CSVFormat.English, analyst);
+            foreach (AnalystField field in analyst.Script.Normalize.NormalizedFields)
+            {
+                field.NormalizedHigh = 1;
+                field.NormalizedLow = -1;
+                field.Action = Encog.Util.Arrayutil.NormalizationAction.Normalize;
+                if (field.Name == "cls")
+                    field.Action = Encog.Util.Arrayutil.NormalizationAction.PassThrough;
+            }
+
+
+            norm.ProduceOutputHeaders = true;
+            norm.Normalize(Normalized);
+        }
+
+
+
 
         public void Run()
         {
+            NormalizeData();
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             if (isRegression == false)
             {
-                DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
+                DataPoints = (new ImportDataPointSets(csvPathNormalized).DataPoints);
                 Network.InitializeTrainingSet(DataPoints, 4);
                 Network.AddLayer(2);
                 Network.AddLayerBunch(Layers, Neurons);
@@ -262,7 +300,7 @@ namespace WinAppV2.ViewModels
             }
             else
             {
-                DataPointsRegression = (new ImportDataPointsSetsRegression(csvPath).DataPoints);
+                DataPointsRegression = (new ImportDataPointsSetsRegression(csvPathNormalized).DataPoints);
                 Network.InitializeTrainingSetRegression(DataPointsRegression);
                 Network.AddLayer(1);
                 Network.AddLayerBunch(Layers, Neurons);
@@ -310,6 +348,7 @@ namespace WinAppV2.ViewModels
             if (ofd.ShowDialog() == true)
             {
                 csvPath = ofd.FileName;
+                csvPathNormalized = ofd.FileName.TrimEnd(".csv".ToCharArray())+"Normalized.csv";
                 DataLoadedChecked = true;
             }
             else
