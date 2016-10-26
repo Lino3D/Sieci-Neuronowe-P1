@@ -191,7 +191,22 @@ namespace WinAppV2.ViewModels
                 OnPropertyChanged("Neurons");
             }
         }
+        public bool TestLoadedChecked
+        {
+            get
+            {
+                return testLoadedChecked;
+            }
 
+            set
+            {
+                testLoadedChecked = value;
+                OnPropertyChanged("TestLoadedChecked");
+            }
+        }
+
+
+        private bool testLoadedChecked;
         private int neurons = 10;
         private int layers = 4;
         private bool isRegression = false;
@@ -211,6 +226,7 @@ namespace WinAppV2.ViewModels
         private List<SNP1.Models.DataPoint> DataPointsRegression;      
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
+        private string csvPathTest = @"..\..\Resource\datatrain.csv";
 
         public ResultsList resultList;
 
@@ -242,9 +258,9 @@ namespace WinAppV2.ViewModels
                 Network.AddLayer(1);
             }
             if (!UnipolarChecked)
-                ProgramController.SetBiPolarActivation(Network);
+                Network.SetBiPolarActivation();
             else
-                ProgramController.SetSigmoidActivation(Network);
+                Network.SetSigmoidActivation();
        
 
             //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
@@ -264,7 +280,17 @@ namespace WinAppV2.ViewModels
             DrawGraph();
 
         }
-
+        public void LoadDataTest()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == true)
+            {
+                csvPathTest = ofd.FileName;
+                TestLoadedChecked = true;
+            }
+            else
+                TestLoadedChecked = false;
+        }
         public void LoadData()
         {
             OpenFileDialog ofd = new OpenFileDialog();
