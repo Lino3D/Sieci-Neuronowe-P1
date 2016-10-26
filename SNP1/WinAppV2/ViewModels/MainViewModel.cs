@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Win32;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -121,8 +122,38 @@ namespace WinAppV2.ViewModels
             }
         }
 
-        private double learningRate = 0.0005;
-        private double momentumRate = 0.0005;
+        public bool UnipolarChecked
+        {
+            get
+            {
+                return unipolarChecked;
+            }
+
+            set
+            {
+                unipolarChecked = value;
+                OnPropertyChanged("UnipolarChecked");
+            }
+        }
+
+        public bool DataLoadedChecked
+        {
+            get
+            {
+                return dataLoadedChecked;
+            }
+
+            set
+            {
+                dataLoadedChecked = value;
+            }
+        }
+
+        private bool dataLoadedChecked = false;
+        private bool unipolarChecked = true;
+
+        private double learningRate = 0.7;
+        private double momentumRate = 0.8;
         private int iterations = 100;
         private bool bias = true;
         private string console;
@@ -148,10 +179,12 @@ namespace WinAppV2.ViewModels
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             DataPoints = (new ImportDataPointSets(csvPath).DataPoints);
             Network.InitializeTrainingSet(DataPoints,4);
-            ProgramController.SetBiPolarActivation(Network);
-
+            if (!UnipolarChecked)
+                ProgramController.SetBiPolarActivation(Network);
+            else
+                ProgramController.SetSigmoidActivation(Network);
             Network.AddLayer(2);
-            Network.AddLayerBunch(2, 4);
+            Network.AddLayerBunch(5, 8);
             Network.AddLayer(4);
 
             //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
@@ -169,6 +202,18 @@ namespace WinAppV2.ViewModels
             resultList = Network.resultList;
             DrawShit();
 
+        }
+
+        public void LoadData()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if( ofd.ShowDialog() == true)
+            {
+                csvPath = ofd.FileName;
+                DataLoadedChecked = true;
+
+            }
+            DataLoadedChecked = false;
         }
 
         public void DrawLearningRate()

@@ -90,6 +90,11 @@ namespace SNP1.DataHelper
             network.ActivationFunction = new ActivationBiPolar();
         }
 
+        public static void SetSigmoidActivation( INeuralNetwork network)
+        {
+            network.ActivationFunction = new ActivationSigmoid();
+        }
+
         
         // To nie pasuje bo nie pozwala na customizację ( jest generowane przez factory, chyba lepiej tworzyć samemu)
 

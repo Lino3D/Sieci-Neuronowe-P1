@@ -30,7 +30,7 @@
             </WrapPanel>
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Label>Activation:</Label>
-                <RadioButton x:Name="ActivationUnipolar" Content="Unipolar" Margin="0,0,10,0"/>
+                <RadioButton x:Name="ActivationUnipolar" Content="Unipolar" IsChecked="{Binding UnipolarChecked,Mode=TwoWay}" Margin="0,0,10,0"/>
                 <RadioButton x:Name="ActivationBipolar" Content="Bipolar"/>
             </WrapPanel>
             <WrapPanel Style="{StaticResource wrapStyle}">
@@ -41,6 +41,9 @@
 
             <WrapPanel Style="{StaticResource wrapStyle}">
                 <Button x:Name="sdf" Content="Start" HorizontalAlignment="Left" cal:Message.Attach="Run"    VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="button" Content="Load Data" HorizontalAlignment="Left" cal:Message.Attach="LoadData" Grid.RowSpan="2" VerticalAlignment="Top" Width="75" Margin="10,0,0,0" />
+                <CheckBox x:Name="checkBox" Content="Data Loaded" IsChecked="{Binding DataLoadedChecked,Mode=TwoWay}" Margin="10,0,0,0"/>
+
 
 
             </WrapPanel>
@@ -76,6 +79,7 @@
             </Grid>
         </TabItem>
         </TabControl>
+        
 
 
 

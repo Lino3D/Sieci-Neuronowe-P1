@@ -174,7 +174,7 @@ namespace SNP1
                     tab[i-1] = 1;
                 }
                 else
-                    tab[i-1] = -1;
+                    tab[i-1] = 0;
             }
 
             return tab;
