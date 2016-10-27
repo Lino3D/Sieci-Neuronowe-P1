@@ -12,9 +12,12 @@ using SNP1;
 using SNP1.DataHelper;
 using SNP1.EPPlus;
 using SNP1.Models;
+using SNP1.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace WinAppV2.ViewModels
 {
@@ -245,18 +248,11 @@ namespace WinAppV2.ViewModels
         private List<SNP1.Models.DataPoint> DataPointsRegressionTraining;
         private List<SNP1.Models.DataPoint> DataPointRegressionTest;
         private List<IterationError> LearningProcess;
-        private string csvPath = @"..\..\Resource\datatrain.csv";
-        private string csvPathTest = @"..\..\Resource\datatrain.csv";
-        private static string csvPathNormalized = @"..\..\Resource\datatrainNormalized.csv";
-        private static string csvPathNormalizedTest = @"..\..\Resource\datatrainNormalized.csv";
+        private string csvPath;
+        private string csvPathTest;
+        private static string csvPathNormalized;
+        private static string csvPathNormalizedTest;
         public ResultsList resultList;
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //protected void OnPropertyChanged(string propertyName)
-        //{
-        //    PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-       
 
         public  void NormalizeData(string normalPath, string normalizedPath)
         {
@@ -296,12 +292,41 @@ namespace WinAppV2.ViewModels
 
         public void Run()
         {
+            IOutput writer = MyCore.Resolve<IOutput>();
+            if (csvPath == null)
+            {
+                
+                writer.Write("Please load training set first!");
+                return;
+            }
+            if(this.csvPathTest==null)
+            {
+                writer.Write("Please load test set first!");
+                return;
+            }
+
+            InitializeDataAndNeurons();
+            if (!UnipolarChecked)
+                Network.SetBiPolarActivation();
+            else
+                Network.SetSigmoidActivation();
+            Network.StartLearning(Iterations);
+            LearningProcess = Network.learningProcess;
+            DrawLearningRate();
+
+            Network.ComputeSet(Network.TestSet);
+
+            resultList = Network.resultList;
+            if (!isRegression)
+                DrawGraph();
+            else
+                DrawRegressionFunction();
+        }
+
+        private void InitializeDataAndNeurons()
+        {
             NormalizeData(csvPath, csvPathNormalized);
             NormalizeData(csvPathTest, csvPathNormalizedTest);
-
-
-
-            //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             if (isRegression == false)
             {
@@ -323,36 +348,15 @@ namespace WinAppV2.ViewModels
                 Network.AddLayerBunch(Layers, Neurons);
                 Network.AddLayer(1);
             }
-            if (!UnipolarChecked)
-                Network.SetBiPolarActivation();
-            else
-                Network.SetSigmoidActivation();
 
-            //Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
-            //newWindowThread.SetApartmentState(ApartmentState.STA);
-            //newWindowThread.IsBackground = true;
-            //newWindowThread.Start();
-
-            //  ErrorCalculator.CalculateError(Network.StartLearning(Iterations).ToList(), Network);
-            Network.StartLearning(Iterations);
-            LearningProcess = Network.learningProcess;
-            DrawLearningRate();
-
-            Network.ComputeSet(Network.TestSet);
-          
-            resultList = Network.resultList;
-            if (!isRegression)
-                DrawGraph();
-            else
-                DrawRegressionFunction();
         }
-
         public void LoadDataTest()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == true)
             {
                 csvPathTest = ofd.FileName;
+                csvPathNormalizedTest = ofd.FileName.TrimEnd(".csv".ToCharArray()) + "Normalized.csv";
                 TestLoadedChecked = true;
             }
             else
@@ -397,8 +401,8 @@ namespace WinAppV2.ViewModels
             {
                 lineSeries.Points.Add(new OxyPlot.DataPoint(resultList.ListX[i], resultList.ListY[i]));
             }
-            RegressionModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = 2 });
-            RegressionModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = LearningProcess.Count });
+            RegressionModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 0, Maximum = resultList.ListX.Max() });
+            RegressionModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Minimum = 0, Maximum = resultList.ListY.Max() });
             RegressionModel.Series.Add(lineSeries);
         }
 
@@ -422,12 +426,12 @@ namespace WinAppV2.ViewModels
         public int InitializeColor(double[] output)
         {
             int color = 1;
-
+            int foundClassIndex = output.ToList().IndexOf(output.Max());
             for (int i = 0; i < output.Count(); i++)
             {
-                if (output[i] == 1)
+                if (i ==foundClassIndex)
                 {
-                    color = i + 100;
+                    color = i*40;
                 }
             }
 
