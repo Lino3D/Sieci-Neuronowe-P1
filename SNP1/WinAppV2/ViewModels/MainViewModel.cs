@@ -231,21 +231,24 @@ namespace WinAppV2.ViewModels
         private bool dataLoadedChecked = false;
         private bool unipolarChecked = true;
 
-        private double learningRate = 0.001;
-        private double momentumRate = 0.001;
-        private int iterations = 100;
+        private double learningRate = 0.000001;
+        private double momentumRate = 0.000001;
+        private int iterations = 5000;
         private bool bias = true;
         private string console;
         private PlotModel learningProcessModel;
         private PlotModel regressionModel;
 
         private SimpleNeuralNetwork Network;
-        private List<DataPointCls> DataPoints;
-        private List<SNP1.Models.DataPoint> DataPointsRegression;
+        private List<DataPointCls> DataPointsClassificationTraining;
+        private List<DataPointCls> DataPointClassificationTest;
+        private List<SNP1.Models.DataPoint> DataPointsRegressionTraining;
+        private List<SNP1.Models.DataPoint> DataPointRegressionTest;
         private List<IterationError> LearningProcess;
         private string csvPath = @"..\..\Resource\datatrain.csv";
         private string csvPathTest = @"..\..\Resource\datatrain.csv";
         private static string csvPathNormalized = @"..\..\Resource\datatrainNormalized.csv";
+        private static string csvPathNormalizedTest = @"..\..\Resource\datatrainNormalized.csv";
         public ResultsList resultList;
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -255,10 +258,10 @@ namespace WinAppV2.ViewModels
         //}
        
 
-        public  void NormalizeData()
+        public  void NormalizeData(string normalPath, string normalizedPath)
         {
-            var toNormalize = new FileInfo(csvPath);
-            var Normalized = new FileInfo(csvPathNormalized);
+            var toNormalizeTraining = new FileInfo(normalPath);
+            var NormalizedTest = new FileInfo(normalizedPath);
             var analyst = new EncogAnalyst();
 
 
@@ -269,11 +272,11 @@ namespace WinAppV2.ViewModels
                 wizard.TargetFieldName = "cls";
             
             //toNormalize.
-            wizard.Wizard(toNormalize, true, AnalystFileFormat.DecpntComma);
+            wizard.Wizard(toNormalizeTraining, true, AnalystFileFormat.DecpntComma);
            
 
             var norm = new AnalystNormalizeCSV();
-            norm.Analyze(toNormalize, true, CSVFormat.English, analyst);
+            norm.Analyze(toNormalizeTraining, true, CSVFormat.English, analyst);
             foreach (AnalystField field in analyst.Script.Normalize.NormalizedFields)
             {
                 field.NormalizedHigh = 1;
@@ -285,7 +288,7 @@ namespace WinAppV2.ViewModels
 
 
             norm.ProduceOutputHeaders = true;
-            norm.Normalize(Normalized);
+            norm.Normalize(NormalizedTest);
         }
 
 
@@ -293,21 +296,29 @@ namespace WinAppV2.ViewModels
 
         public void Run()
         {
-            NormalizeData();
+            NormalizeData(csvPath, csvPathNormalized);
+            NormalizeData(csvPathTest, csvPathNormalizedTest);
+
+
+
             //   ProgramController.InitializeSimpleNetwork();
             Network = new SimpleNeuralNetwork((double)learningRate, (double)momentumRate, bias);
             if (isRegression == false)
             {
-                DataPoints = (new ImportDataPointSets(csvPathNormalized).DataPoints);
-                Network.InitializeTrainingSet(DataPoints, 4);
+                DataPointsClassificationTraining = (new ImportDataPointSets(csvPathNormalized).DataPoints);
+                DataPointClassificationTest = (new ImportDataPointSets(csvPathNormalizedTest).DataPoints);
+                Network.TrainingSet = Network.InitializeClassificationSet(DataPointsClassificationTraining, 4);
+                Network.TestSet = Network.InitializeClassificationSet(DataPointClassificationTest, 4);
                 Network.AddLayer(2);
                 Network.AddLayerBunch(Layers, Neurons);
                 Network.AddLayer(4);
             }
             else
             {
-                DataPointsRegression = (new ImportDataPointsSetsRegression(csvPathNormalized).DataPoints);
-                Network.InitializeTrainingSetRegression(DataPointsRegression);
+                DataPointsRegressionTraining = (new ImportDataPointsSetsRegression(csvPathNormalized).DataPoints);
+                DataPointRegressionTest = (new ImportDataPointsSetsRegression(csvPathNormalizedTest).DataPoints);
+                Network.TrainingSet = Network.InitializeRegressionSet(DataPointsRegressionTraining);
+                Network.TestSet = Network.InitializeRegressionSet(DataPointRegressionTest);
                 Network.AddLayer(1);
                 Network.AddLayerBunch(Layers, Neurons);
                 Network.AddLayer(1);
@@ -327,8 +338,8 @@ namespace WinAppV2.ViewModels
             LearningProcess = Network.learningProcess;
             DrawLearningRate();
 
-            var result = Network.ComputeTrainingSet().ToList();
-            //ErrorCalculator.CalculateError(Network.ComputeTrainingSet().ToList(), Network);
+            Network.ComputeSet(Network.TestSet);
+          
             resultList = Network.resultList;
             if (!isRegression)
                 DrawGraph();

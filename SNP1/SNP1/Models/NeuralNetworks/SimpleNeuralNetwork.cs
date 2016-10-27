@@ -149,8 +149,10 @@ namespace SNP1
             this.Network.Reset();
         }
 
-        public void InitializeTrainingSet(List<DataPointCls> points, int MaxClass)
+        public BasicMLDataSet InitializeClassificationSet(List<DataPointCls> points, int MaxClass)
         {
+
+
             Regression = false;
             double[][] input = new double[points.Count][];
             for (int i = 0; i < points.Count; i++)
@@ -161,12 +163,13 @@ namespace SNP1
             double[][] idealOutput = new double[points.Count][];
             for (int i = 0; i < points.Count; i++)
             {
-                idealOutput[i] = GetExpectedOutput(points[i].Cls, MaxClass);
+               idealOutput[i] = GetExpectedOutput(points[i].Cls, MaxClass);
+
             }
 
-            this.TrainingSet = new BasicMLDataSet(input, idealOutput);
+            return new BasicMLDataSet(input, idealOutput);
         }
-        public void InitializeTrainingSetRegression(List<DataPoint> points)
+        public BasicMLDataSet InitializeRegressionSet(List<DataPoint> points)
         {
             Regression = true;
             double[][] input = new double[points.Count][];
@@ -180,7 +183,7 @@ namespace SNP1
             {
                 idealOutput[i] = new[] { points[i].Y };
             }
-            this.TrainingSet = new BasicMLDataSet(input, idealOutput);
+            return new BasicMLDataSet(input, idealOutput);
         }
 
         private double[] GetExpectedOutput(int cls, int MaxClass)
@@ -240,26 +243,40 @@ namespace SNP1
 
 
 
-        public IEnumerable<IResult> ComputeTrainingSet()
+        public void ComputeSet(IMLDataSet setToCompute)
         {
-            if (TrainingSet == null)
-                yield break;
+            
 
             IOutput writer = MyCore.Resolve<IOutput>();
 
-            foreach (IMLDataPair pair in TrainingSet)
+            foreach (IMLDataPair pair in setToCompute)
             {
                
                 IMLData output = Network.Compute(pair.Input);
                 if (!Regression)
-                    writer.Write(String.Format(@"{0},{1}, actual={2},ideal={3}", pair.Input[0], pair.Input[1], GetOutput(output), GetClass(pair.Ideal)));
+                    writer.Write(String.Format(@"{0},{1}, actual={2},ideal={3}", pair.Input[0], pair.Input[1], GetOutputFormat(output), GetClass(pair.Ideal)));
                 else
                     writer.Write(String.Format(@"{0}, actual={1},ideal={2}", pair.Input[0], output, pair.Ideal));
                 AddToResults(pair, output);
-
-                yield return new Result() { Input = pair, Output = output };
             }
         }
+        private string GetOutputFormat(IMLData output)
+        {
+            int maxIndex = 0;
+            double max = double.MinValue;
+            for (int i = 0; i < output.Count; i++)
+            {
+                if (output[i] > max)
+                {
+                    max = output[i];
+                    maxIndex = i;
+                }
+            }
+            return " Output class: " + (maxIndex + 1) + " ";
+        }
+
+
+
 
         private void AddToResults(IMLDataPair pair, IMLData output)
         {

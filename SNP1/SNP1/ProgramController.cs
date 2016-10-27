@@ -71,14 +71,14 @@ namespace SNP1.DataHelper
 
 
             SimpleNeuralNetwork myNetwork = new SimpleNeuralNetwork();
-            myNetwork.InitializeTrainingSet(points,4);
+            //myNetwork.InitializeTrainingSet(points,4);
             var ts = myNetwork.TrainingSet;
             myNetwork.ActivationFunction = new ActivationBiPolar();
             myNetwork.AddLayer(2);
             myNetwork.AddLayerBunch(2, 4);
             myNetwork.AddLayer(4);
             myNetwork.StartLearning(interations);
-            ErrorCalculator.CalculateError(myNetwork.ComputeTrainingSet().ToList(), myNetwork);
+            //ErrorCalculator.CalculateError(myNetwork.ComputeTrainingSet().ToList(), myNetwork);
         }
         public static void InitializeSimpleNetwork( )
         {
